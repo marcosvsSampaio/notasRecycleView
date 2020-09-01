@@ -4,57 +4,56 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
 import br.com.ceeprecycleview.R;
 import br.com.ceeprecycleview.model.Nota;
+import br.com.ceeprecycleview.ui.activity.ListaNotasActivity;
 
-public class ListaNotasAdapter extends BaseAdapter {
+public class ListaNotasAdapter extends RecyclerView.Adapter{
 
-    private final Context context;
-    private final List<Nota> notas;
+    private Context context;
+    private List<Nota> notas;
 
     public ListaNotasAdapter(Context context, List<Nota> notas) {
         this.context = context;
         this.notas = notas;
     }
 
+    @NonNull
     @Override
-    public int getCount() {
-        return notas.size();
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View viewCriada = LayoutInflater.from(context)
+                .inflate(R.layout.item_nota, parent, false);
+        return new NotaViewHolder(viewCriada);
     }
 
     @Override
-    public Nota getItem(int position) {
-        return notas.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View viewCriada = LayoutInflater.from(context).inflate(R.layout.item_nota, parent, false);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Nota nota = notas.get(position);
-
-        mostraTitulo(viewCriada, nota);
-
-        mostraDescricao(viewCriada, nota);
-        return viewCriada;
-    }
-
-    private void mostraDescricao(View viewCriada, Nota nota) {
-        TextView descricao = viewCriada.findViewById(R.id.item_nota_descricao);
+        TextView titulo = holder.itemView.findViewById(R.id.item_nota_titulo);
+        titulo.setText(nota.getTitulo());
+        TextView descricao = holder.itemView.findViewById(R.id.item_nota_descricao);
         descricao.setText(nota.getDescricao());
     }
 
-    private void mostraTitulo(View viewCriada, Nota nota) {
-        TextView titulo = viewCriada.findViewById(R.id.item_nota_titulo);
-        titulo.setText(nota.getTitulo());
+    @Override
+    public int getItemCount() {
+        return notas.size();
+    }
+
+    class NotaViewHolder extends RecyclerView.ViewHolder {
+
+        public NotaViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
     }
 }

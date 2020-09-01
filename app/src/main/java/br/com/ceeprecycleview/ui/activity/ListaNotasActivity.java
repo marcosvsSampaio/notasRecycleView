@@ -1,9 +1,13 @@
 package br.com.ceeprecycleview.ui.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -18,7 +22,7 @@ public class ListaNotasActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_notas);
-        ListView listaNotas = findViewById(R.id.listView);
+        RecyclerView listaNotas = findViewById(R.id.listaNotasRecycler);
 
         NotaDAO dao = new NotaDAO();
         for (int i = 1; i <= 10000; i++){
@@ -27,7 +31,8 @@ public class ListaNotasActivity extends AppCompatActivity {
 
         List<Nota> notas = dao.todos();
 
-        ListaNotasAdapter adapter = new ListaNotasAdapter(this, notas);
-        listaNotas.setAdapter(adapter);
+        RecyclerView.LayoutManager layoutManage = new LinearLayoutManager(this);
+        listaNotas.setLayoutManager(layoutManage);
+        listaNotas.setAdapter(new ListaNotasAdapter(this, notas));
     }
 }
