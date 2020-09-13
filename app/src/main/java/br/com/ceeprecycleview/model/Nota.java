@@ -1,6 +1,8 @@
 package br.com.ceeprecycleview.model;
 
-public class Nota {
+import java.io.Serializable;
+
+public class Nota implements Serializable {
     private final String titulo;
     private final String descricao;
 
