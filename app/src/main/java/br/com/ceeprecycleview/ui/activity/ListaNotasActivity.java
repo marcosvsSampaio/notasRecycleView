@@ -31,7 +31,7 @@ import static br.com.ceeprecycleview.ui.activity.NotaActivityConstantes.RESQUEST
 public class ListaNotasActivity extends AppCompatActivity {
 
 
-    public static final String NOTAS = "Notas";
+    public static final String TITULO_APPBAR = "Notas";
     private ListaNotasAdapter adapter;
     private NotaDAO dao;
 
@@ -39,7 +39,7 @@ public class ListaNotasActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_notas);
-        setTitle(NOTAS);
+        setTitle(TITULO_APPBAR);
         List<Nota> notas = getNotas();
         configuraRecyclerView(notas);
         configuraBotaoNovaNota();
@@ -47,9 +47,6 @@ public class ListaNotasActivity extends AppCompatActivity {
 
     private List<Nota> getNotas() {
         dao = new NotaDAO();
-        for (int i = 0; i < 10; i++) {
-            dao.insere(new Nota("Nota " + (i + 1), "Descricao " + (i + 1)));
-        }
         return dao.todos();
     }
 
@@ -68,8 +65,6 @@ public class ListaNotasActivity extends AppCompatActivity {
                 int posicaoRecebida = data.getIntExtra(CHAVE_POSICAO, POSICAO_INVALIDA);
                 if (posicaoValida(posicaoRecebida)) {
                     altera(notaRecebida, posicaoRecebida);
-                } else {
-                    Toast.makeText(this, "Ocorreu um problema na alteração de nota", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -86,7 +81,7 @@ public class ListaNotasActivity extends AppCompatActivity {
 
     private boolean resultadoAlteraNota(int requestCode, @Nullable Intent data) {
         return requestCodeAlteraNota(requestCode) &&
-                data.hasExtra(CHAVE_NOTA);
+                temNota(data);
     }
 
     private boolean requestCodeAlteraNota(int requestCode) {
@@ -100,7 +95,11 @@ public class ListaNotasActivity extends AppCompatActivity {
 
     private boolean resultadoNovaNota(int requestCode, @Nullable Intent data) {
         return requestCodeNovaNota(requestCode) &&
-                data.hasExtra(CHAVE_NOTA);
+                temNota(data);
+    }
+
+    private boolean temNota(@Nullable Intent data) {
+        return data != null && data.hasExtra(CHAVE_NOTA);
     }
 
     private boolean resultadoOk(int resultCode) {
@@ -129,7 +128,11 @@ public class ListaNotasActivity extends AppCompatActivity {
     private void configuraRecyclerView(List<Nota> notas) {
         RecyclerView listaNotas = findViewById(R.id.listaNotasRecycler);
         configuraAdapter(notas, listaNotas);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new NotaItemTouchHelper());
+        configuraItemTouchHelper(listaNotas);
+    }
+
+    private void configuraItemTouchHelper(RecyclerView listaNotas) {
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new NotaItemTouchHelper(adapter));
         itemTouchHelper.attachToRecyclerView(listaNotas);
     }
 

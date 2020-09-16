@@ -2,6 +2,7 @@ package br.com.ceeprecycleview.dao;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import br.com.ceeprecycleview.model.Nota;
@@ -27,5 +28,9 @@ public class NotaDAO {
 
     public void removeTodos() {
         notas.clear();
+    }
+
+    public void troca(int posicaoInicio, int posicaoFim) {
+        Collections.swap(notas, posicaoInicio, posicaoFim);
     }
 }

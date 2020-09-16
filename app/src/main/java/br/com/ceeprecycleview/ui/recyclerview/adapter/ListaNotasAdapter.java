@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Collections;
 import java.util.List;
 
 import br.com.ceeprecycleview.R;
@@ -49,17 +50,12 @@ public class ListaNotasAdapter extends RecyclerView.Adapter<ListaNotasAdapter.No
         this.onItemClickListener = onItemClickListener;
     }
 
-    public void altera(int posicao, Nota nota) {
-        notas.set(posicao, nota);
-        notifyDataSetChanged();
-    }
-
     class NotaViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView titulo;
+
         private final TextView descricao;
         private Nota nota;
-
         public NotaViewHolder(@NonNull View itemView) {
             super(itemView);
             titulo = itemView.findViewById(R.id.item_nota_titulo);
@@ -77,10 +73,25 @@ public class ListaNotasAdapter extends RecyclerView.Adapter<ListaNotasAdapter.No
             descricao.setText(nota.getDescricao());
             this.nota = nota;
         }
-    }
 
+    }
     public void adiciona(Nota nota) {
         notas.add(nota);
         notifyDataSetChanged();
+    }
+
+    public void altera(int posicao, Nota nota) {
+        notas.set(posicao, nota);
+        notifyItemChanged(posicao);
+    }
+
+    public void remove(int posicao) {
+        notas.remove(posicao);
+        notifyItemRemoved(posicao);
+    }
+
+    public void troca(int posicaoInicio, int posicaoFim) {
+        Collections.swap(notas, posicaoInicio, posicaoFim);
+        notifyItemMoved(posicaoInicio, posicaoFim);
     }
 }
